@@ -1,0 +1,50 @@
+
+
+#to-top-container {
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    border-radius: 4px;
+    background-color: #1088e9;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+}
+
+#easymark-edit-area {
+    padding: 20px 50px;
+}
+
+.main-editor h1, .main-editor h2, .main-editor h3, .main-editor h4, .main-editor h5, .main-editor h6 {
+    color: #575757;
+    font-weight: bold;
+}
+
+.main-editor h1 {
+    font-size: 32px;
+}
+
+.main-editor h2 {
+    font-size: 26px;
+}
+
+.main-editor h3 {
+    font-size: 22px;
+}
+
+.main-editor h4 {
+    font-size: 18px;
+}
+
+.main-editor h5 {
+    font-size: 16px;
+}
+
+.main-editor h6 {
+    font-size: 14px;
+}
+
+.main-editor p {
+    font-size: 14px;
+    color: #575757;
+}

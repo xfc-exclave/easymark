@@ -1,0 +1,109 @@
+@import "antd/dist/antd.css";
+
+.site-layout .site-layout-background {
+    background: #fff;
+}
+
+.window-dragable {
+    -webkit-app-region: drag;
+}
+
+.ant-layout-header {
+    height: 30px;
+    line-height: 30px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+#content-header {
+    background: none;
+}
+
+.ant-layout-footer {
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: #b6b3b3;
+}
+
+#main-content-box {
+    margin: 30px 0;
+    overflow-y: scroll;
+}
+
+#main-content-box::-webkit-scrollbar {
+    width: 5px;
+}
+
+#main-content-box::-webkit-scrollbar-thumb {
+    background: #b8b8b8;
+    border-radius: 10px;
+}
+
+.footer-button-item {
+    margin: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    height: 100%;
+    color: #d3d3d3;
+}
+
+.footer-button-item svg {
+    line-height: 100%;
+}
+
+.footer-button-item:hover {
+    color: #808080;
+}
+
+.system-button-item {
+    height: 100%;
+}
+
+.system-button-item svg {
+    width: 40px;
+    text-align: center;
+    height: 100%;
+    padding: 10px;
+}
+
+.system-button-item.info {
+    color: #8ab3ca;
+}
+
+.system-button-item.danger {
+    color: #f0a7a7;
+}
+
+.system-button-item.primary svg:hover {
+    background: #d3d3d3;
+}
+
+.system-button-item.close svg:hover {
+    background: red;
+    color: #fff;
+}
+
+.footer-hint-text {
+    font-size: 12px;
+    margin: 0 15px;
+}
+
+.ant-layout-footer .text-button {
+    line-height: 100%;
+    padding: 0 5px;
+    cursor: default;
+}
+
+.ant-layout-footer .text-button:hover {
+    color: #808080;
+}
+
+.ant-tooltip-content .ant-tooltip-inner {
+    font-size: 12px;
+}
