@@ -1,113 +1,112 @@
 import React from "react";
-import { Layout, Row, Col, Breadcrumb, Tooltip } from "antd";
+import { Layout, Row, Col, Dropdown, Menu } from 'antd';
 import {
-  CodeFilled,
-  CloseOutlined,
-  MinusOutlined,
-  CompressOutlined,
-  ExpandOutlined,
-  InfoCircleFilled,
-  CheckCircleFilled,
-  GithubOutlined,
-  UserOutlined,
-  AppstoreFilled,
-  CloudFilled
+  SettingFilled,
+  MenuOutlined
 } from "@ant-design/icons";
 import Dashboard from "./components/Dashboard";
 import FileTree from "./components/FileTree";
+import EditorHeader from "./components/EditorHeader";
+import EditorFooter from "./components/EditorFooter";
 import "./index.css";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 export default function MainLayout(props) {
 
   const [collapsed, setCollapsed] = React.useState(false)
-  const [saved, setSaved] = React.useState(true)// 当前文本是否保存
-  const [maximized, setMaximized] = React.useState(false)// 是否最大化
-
   const switchToolView = () => setCollapsed(!collapsed)
+  const siderWidth = 250;
+  const [siderType, setSiderType] = React.useState('folder')
+
+  const moreMenu = (
+    <Menu
+      items={[
+        {
+          key: '1',
+          label: (
+            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">File</a>
+          ),
+          children: []
+        },
+        {
+          key: '2',
+          label: (
+            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">Edit</a>
+          ),
+          children: []
+        },
+        {
+          key: '3',
+          label: (
+            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">Paragraph</a>
+          ),
+          children: [
+            {
+              key: '3-1',
+              label: (
+                <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">Paragraph</a>
+              ),
+            }
+          ]
+        },
+      ]}
+    />
+  );
 
   return (
     <Layout style={{minHeight: '100vh'}}>
-      <Sider theme="light" collapsible collapsed={collapsed} trigger={null}
-        collapsedWidth={0}
+      <Sider collapsible collapsed={collapsed} trigger={null} collapsedWidth={0} width={siderWidth}
         style={{
           overflow: 'auto',
           position: 'fixed',
-          paddingTop: '30px',
+          padding: '70px 0 30px',
           left: 0,
           top: 0,
           bottom: 0,
           background: '#464b50'
         }}>
-          <div style={{position: 'fixed'}}></div>
-        <FileTree />
-      </Sider>
-      <Layout className="site-layout" style={{ marginLeft: collapsed ? 0 : '200px', height: '100vh' }}>
-        <Header className="site-layout-background" id="content-header" style={{ padding: 0, width: collapsed ? '100%': 'calc(100% - 200px)' }}>
-          <Row wrap={false} style={{height: '100%'}}>
+        <div style={{position: 'fixed', top: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
+          <Row wrap={false}>
+            <Col flex="auto" className="window-dragable"></Col>
             <Col flex="none">
-              {
-              saved
-              ? <CheckCircleFilled className="system-button-item info" />
-              : <InfoCircleFilled className="system-button-item danger" />
-              }
-            </Col>
-            <Col flex="auto" className="window-dragable">
-              <Breadcrumb style={{ margin: '3px 0' }}>
-                <Breadcrumb.Item>User</Breadcrumb.Item>
-                <Breadcrumb.Item>Administrator</Breadcrumb.Item>
-                <Breadcrumb.Item>Desktop</Breadcrumb.Item>
-                <Breadcrumb.Item>python-tutorial.md</Breadcrumb.Item>
-              </Breadcrumb>
-            </Col>
-            <Col flex="none">
-              <MinusOutlined className="system-button-item primary" />
-              {
-              maximized
-              ? <CompressOutlined className="system-button-item primary" />
-              : <ExpandOutlined className="system-button-item primary" />
-              }
-              <CloseOutlined className="system-button-item close" />
+              <Dropdown overlay={moreMenu} placement="bottomRight">
+                <MenuOutlined style={{cursor: 'pointer', fontSize: '16px', paddingTop: '5px'}} />
+              </Dropdown>
             </Col>
           </Row>
-        </Header>
+        </div>
+        <div style={{position: 'fixed', top: 35, left: 0, width: siderWidth, textAlign: 'center'}}>
+          <Row style={{color: '#9b9b9b'}}>
+            <Col span={8}>
+              <div className={"easymark-sider-type " + (siderType == 'folder' ? "active" : '')} onClick={() => setSiderType('folder')}>Folder</div>
+            </Col>
+            <Col span={8}>
+              <div className={"easymark-sider-type " + (siderType == 'category' ? "active" : '')} onClick={() => setSiderType('category')}>Category</div>
+            </Col>
+            <Col span={8}>
+              <div className={"easymark-sider-type " + (siderType == 'recent' ? "active" : '')} onClick={() => setSiderType('recent')}>Recent</div>
+            </Col>
+          </Row>
+        </div>
+        <FileTree />
+        <div style={{position: 'fixed', bottom: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
+          <Row wrap={false}>
+            <Col flex="none">
+              <Dropdown overlay={moreMenu} placement="topLeft">
+                <SettingFilled style={{cursor: 'pointer', fontSize: '18px', paddingTop: '2px'}} />
+              </Dropdown>
+            </Col>
+            <Col flex="auto"></Col>
+          </Row>
+        </div>
+      </Sider>
+      <Layout className="site-layout" style={{ marginLeft: collapsed ? 0 : siderWidth, height: '100vh' }}>
+        <EditorHeader collapsed={collapsed} siderWidth={siderWidth}></EditorHeader>
         <Content id="main-content-box">
           <Dashboard />
         </Content>
-        <Footer style={{ padding: 0, width: collapsed ? '100%': 'calc(100% - 200px)' }}>
-          <Row wrap={false} style={{height: '100%'}}>
-            <Col flex="auto" style={{padding: '0 5px'}}>
-              <Tooltip placement="topLeft" color='#b6b3b3' arrowPointAtCenter={true} style={{fontSize: '12px'}} title="Hide / Show Sidebar">
-                <AppstoreFilled className="footer-button-item" onClick={switchToolView} />
-              </Tooltip>
-              <Tooltip placement="topLeft" color='#b6b3b3' arrowPointAtCenter={true} style={{fontSize: '12px'}} title="View source code">
-                <CodeFilled className="footer-button-item" />
-              </Tooltip>
-              <span className="footer-hint-text">按 <span style={{color: '#98989b', fontWeight: 'bold'}}>Ctrl+H</span> 获取快捷键提示！</span>
-            </Col>
-            <Col flex="none" style={{padding: '0 5px'}}>
-              <div className="footer-hint-text" style={{display: 'inline-block'}}>
-                <Tooltip placement="top" color='#b6b3b3' arrowPointAtCenter={true} style={{fontSize: '12px'}} title="Word Count: 245">
-                  <span className="text-button">245 W</span>
-                </Tooltip>
-                <Tooltip placement="top" color='#b6b3b3' arrowPointAtCenter={true} style={{fontSize: '12px'}} title="Select Encoding">
-                  <span className="text-button">UTF-8</span>
-                </Tooltip>
-              </div>
-              <Tooltip placement="top" color='#b6b3b3' arrowPointAtCenter={true} style={{fontSize: '12px'}} title="EasyMark Cloud">
-                <CloudFilled className="footer-button-item" />
-              </Tooltip>
-              <Tooltip placement="top" color='#b6b3b3' arrowPointAtCenter={true} style={{fontSize: '12px'}} title="Visit our github">
-                <GithubOutlined className="footer-button-item" />
-              </Tooltip>
-              <span className="text-button" style={{padding: 0, cursor: 'pointer'}}>
-                <UserOutlined className="footer-button-item" />
-                <span style={{fontSize: '12px'}}>Chinmoku</span>
-              </span>
-            </Col>
-          </Row>
-        </Footer>
+        <EditorFooter collapsed={collapsed} siderWidth={siderWidth} collapseHandler={switchToolView}></EditorFooter>
       </Layout>
     </Layout>
   );

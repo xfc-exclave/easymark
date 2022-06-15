@@ -107,3 +107,50 @@
 .ant-tooltip-content .ant-tooltip-inner {
     font-size: 12px;
 }
+
+.ant-tree.ant-tree-directory .ant-tree-treenode-selected:hover::before, .ant-tree.ant-tree-directory .ant-tree-treenode-selected::before {
+    background: none;
+}
+
+.ant-tree.ant-tree-directory .ant-tree-treenode .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    color: #6886aa;
+}
+
+.ant-tree.ant-tree-directory .ant-tree-treenode:hover::before {
+    background: #4b5155;
+}
+
+.ant-tree-node-content-wrapper {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+aside .ant-layout-sider-children {
+    overflow-y: auto;
+}
+
+aside .ant-layout-sider-children::-webkit-scrollbar {
+    width: 5px;
+}
+
+aside .ant-layout-sider-children::-webkit-scrollbar-thumb {
+    background: #6c6c6c;
+    border-radius: 10px;
+}
+
+.easymark-sider-type {
+    margin: 0 10px;
+    padding-bottom: 3px;
+    cursor: pointer;
+}
+
+.easymark-sider-type:hover {
+    border-bottom: 3px solid #6c6c6c;
+}
+
+.easymark-sider-type.active {
+    border-bottom: 3px solid #6886aa;
+    color: #6886aa;
+    font-weight: bold;
+}
