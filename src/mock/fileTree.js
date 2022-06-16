@@ -118,4 +118,20 @@ export const fileTreeNodes = [
       },
     ],
   },
+  {
+    title: 'python',
+    key: '0-2',
+    children: [
+      {
+        title: 'django-tutorial.md',
+        key: '0-2-0',
+        isLeaf: true,
+      },
+      {
+        title: 'python-all-base.md',
+        key: '0-2-1',
+        isLeaf: true,
+      },
+    ],
+  },
 ];

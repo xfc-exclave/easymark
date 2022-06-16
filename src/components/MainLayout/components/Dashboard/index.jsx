@@ -1,4 +1,6 @@
+import React from "react";
 import { BackTop } from "antd";
+import MonacoEditor from "react-monaco-editor/lib/editor";
 import "./index.css";
 
 const style = {
@@ -13,31 +15,34 @@ const style = {
 };
 
 export default function Dashboard(props) {
+
+    const editorDidMount = editor => editor.focus()
+    
+    const editorChangeHandler = (v, e) => console.log('change => ', v, e)
+    const [view, setView] = React.useState('editor')
+
+    const editorOptions = {
+        selectOnLineNumbers: true
+    }
+
     return (
         <div style={{ maxWidth: '1200px', margin: '10px auto', padding: '0 5px', minHeight: '400px' }}>
-            <div id='easymark-edit-area' className='main-editor'>
-                <h1>Python Django 服务器开发</h1>
-                <h2>Python Django 服务器开发</h2>
-                <h3>Python Django 服务器开发</h3>
-                <h4>Python Django 服务器开发</h4>
-                <h5>Python Django 服务器开发</h5>
-                <h6>Python Django 服务器开发</h6>
-                <p>Python Django 服务器开发</p>
-                {/* <h3 style={{ padding: '10px' }}>Python Django 服务器开发</h3>
-                <div className="site-layout-background" style={{ padding: 24, minHeight: '400px' }}>
-                    <p>早上好，<a href="/">Somebody</a>！欢迎登录 XXX 管理系统。</p>
-                    <h3>商品营销信息概览：</h3>
-                    <div style={{ marginTop: '20px' }}>
-                        <DemoChart></DemoChart>
-                    </div>
+            <div id='easymark-edit-area'>
+                <div className='main-editor' style={{display: view === 'previewer' ? '' : 'none'}}>
+                    <h1>H1 - Python Spider 从入门到入狱</h1>
+                    <h2>H2 - Python Spider 从入门到入狱</h2>
+                    <h3>H3 - Python Spider 从入门到入狱</h3>
+                    <h4>H4 - Python Spider 从入门到入狱</h4>
+                    <h5>H5 - Python Spider 从入门到入狱</h5>
+                    <h6>H6 - Python Spider 从入门到入狱</h6>
+                    <p>P - Python Spider 从入门到入狱</p>
                 </div>
-                <div className="site-layout-background" style={{ padding: 24, marginTop: '20px', minHeight: '400px' }}>
-                    <p>早上好，<a href="/">Somebody</a>！欢迎登录 XXX 管理系统。</p>
-                    <h3>商品营销信息概览：</h3>
-                    <div style={{ marginTop: '20px' }}>
-                        <DemoChart></DemoChart>
-                    </div>
-                </div> */}
+                <div style={{display: view === 'editor' ? '' : 'none'}}>
+                    <MonacoEditor width="800" height="600" language="markdown" theme='vs'
+                    options={editorOptions}
+                    onChange={editorChangeHandler}
+                    editorDidMount={editorDidMount} />
+                </div>
             </div>
             <BackTop>
                 <div style={style}>UP</div>

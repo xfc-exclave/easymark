@@ -79,13 +79,13 @@ export default function MainLayout(props) {
         <div style={{position: 'fixed', top: 35, left: 0, width: siderWidth, textAlign: 'center'}}>
           <Row style={{color: '#9b9b9b'}}>
             <Col span={8}>
-              <div className={"easymark-sider-type " + (siderType == 'folder' ? "active" : '')} onClick={() => setSiderType('folder')}>Folder</div>
+              <div className={"easymark-sider-type " + (siderType === 'folder' ? "active" : '')} onClick={() => setSiderType('folder')}>Folder</div>
             </Col>
             <Col span={8}>
-              <div className={"easymark-sider-type " + (siderType == 'category' ? "active" : '')} onClick={() => setSiderType('category')}>Category</div>
+              <div className={"easymark-sider-type " + (siderType === 'category' ? "active" : '')} onClick={() => setSiderType('category')}>Category</div>
             </Col>
             <Col span={8}>
-              <div className={"easymark-sider-type " + (siderType == 'recent' ? "active" : '')} onClick={() => setSiderType('recent')}>Recent</div>
+              <div className={"easymark-sider-type " + (siderType === 'recent' ? "active" : '')} onClick={() => setSiderType('recent')}>Recent</div>
             </Col>
           </Row>
         </div>
@@ -93,7 +93,7 @@ export default function MainLayout(props) {
         <div style={{position: 'fixed', bottom: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
           <Row wrap={false}>
             <Col flex="none">
-              <Dropdown overlay={moreMenu} placement="topLeft">
+              <Dropdown overlay={moreMenu} placement="topLeft" trigger={['click']}>
                 <SettingFilled style={{cursor: 'pointer', fontSize: '18px', paddingTop: '2px'}} />
               </Dropdown>
             </Col>
