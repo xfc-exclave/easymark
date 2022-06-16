@@ -13,6 +13,8 @@ const { Footer } = Layout;
 export default function EditorFooter(props) {
 
   const collapseHandler = () => props.collapseHandler()
+  const switchSourceView = () => props.switchSourceView()
+
   return (
     <div>
       <Footer style={{ padding: 0, width: props.collapsed ? '100%' : 'calc(100% - ' + props.siderWidth + 'px)' }}>
@@ -22,7 +24,7 @@ export default function EditorFooter(props) {
               <AppstoreFilled className="footer-button-item" onClick={collapseHandler} />
             </Tooltip>
             <Tooltip placement="topLeft" color='#b6b3b3' arrowPointAtCenter={true} style={{ fontSize: '12px' }} title="View source code">
-              <CodeFilled className="footer-button-item" />
+              <CodeFilled className="footer-button-item" onClick={switchSourceView} />
             </Tooltip>
             <span className="footer-hint-text">按 <span style={{ color: '#98989b', fontWeight: 'bold' }}>Ctrl+H</span> 获取快捷键提示！</span>
           </Col>

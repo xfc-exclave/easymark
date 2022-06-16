@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Row, Col, Dropdown, Menu } from 'antd';
+import { Layout, Row, Col, Dropdown, Menu, Tabs } from 'antd';
 import {
   SettingFilled,
   MenuOutlined
@@ -8,8 +8,10 @@ import Dashboard from "./components/Dashboard";
 import FileTree from "./components/FileTree";
 import EditorHeader from "./components/EditorHeader";
 import EditorFooter from "./components/EditorFooter";
+import OriginEditor from "./components/OriginEditor";
 import "./index.css";
 
+const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
 
 export default function MainLayout(props) {
@@ -18,6 +20,20 @@ export default function MainLayout(props) {
   const switchToolView = () => setCollapsed(!collapsed)
   const siderWidth = 250;
   const [siderType, setSiderType] = React.useState('folder')
+
+  const [sourceView, setSourceView] = React.useState(true)
+
+  const [source, setSource] = React.useState('')// 当前预览的源文本
+  const switchSourceView = () => {
+    if (sourceView) {
+      panes.forEach(tab => {
+        if (tab.key === activeKey) {
+          setSource(tab.content)
+        }
+      })
+    }
+    setSourceView(!sourceView)
+  }
 
   const moreMenu = (
     <Menu
@@ -53,6 +69,85 @@ export default function MainLayout(props) {
       ]}
     />
   );
+
+  const currentFileList = [
+    {
+      key: '1',
+      title: 'react-tutorial.md',
+      content: ''
+    },
+    {
+      key: '2',
+      title: 'python-all-base.md',
+      content: ''
+    },
+    {
+      key: '3',
+      title: 'django-tutorial.md',
+      content: ''
+    }
+  ]
+
+  const [newFileCounter, setNewFileCounter] = React.useState(1)
+
+  const [panes, setPanes] = React.useState(currentFileList);
+  const [activeKey, setActiveKey] = React.useState(currentFileList[0].key);
+  const newTabIndex = React.useRef(0);
+  const onChange = (key) => {
+    setActiveKey(key);
+  };
+  const add = () => {
+    const newActiveKey = `newTab${newTabIndex.current++}`;
+    setPanes([
+      ...panes,
+      {
+        title: 'new-easymark-' + newFileCounter + '.md',
+        content: '',
+        key: newActiveKey,
+      },
+    ]);
+    setNewFileCounter(newFileCounter + 1)
+    setActiveKey(newActiveKey);
+  };
+  const remove = (targetKey) => {
+    console.log(targetKey)
+    let lastIndex = -1;
+    panes.forEach((pane, i) => {
+      if (pane.key === targetKey) {
+        lastIndex = i - 1;
+      }
+    });
+
+    if (panes.length && activeKey === targetKey) {
+      let newActiveKey;
+
+      if (lastIndex >= 0) {
+        newActiveKey = panes[lastIndex].key;
+      } else {
+        newActiveKey = panes[0].key;
+      }
+
+      setActiveKey(newActiveKey);
+    }
+
+    const newPanes = panes.filter((pane) => pane.key !== targetKey);
+    setPanes(newPanes);
+  };
+  const onEdit = (targetKey, action) => {
+    if (action === 'add') {
+      add();
+    } else {
+      remove(targetKey);
+    }
+  };
+
+  const bindContent = (tabKey, text) => {
+    panes.forEach(tab => {
+      if (tab.key === tabKey) {
+        tab.content = text
+      }
+    })
+  }
 
   return (
     <Layout style={{minHeight: '100vh'}}>
@@ -102,11 +197,22 @@ export default function MainLayout(props) {
         </div>
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: collapsed ? 0 : siderWidth, height: '100vh' }}>
-        <EditorHeader collapsed={collapsed} siderWidth={siderWidth}></EditorHeader>
+        <EditorHeader collapsed={collapsed} siderWidth={siderWidth} />
         <Content id="main-content-box">
-          <Dashboard />
+          <Tabs type="editable-card" onChange={onChange} activeKey={activeKey} onEdit={onEdit} size="small" style={{height: '100%'}}>
+            { panes.map((pane, index) =>(
+              <TabPane tab={pane.title} key={pane.key} style={{height: '100%'}}>
+                <div style={{display: !sourceView ? '' : 'none'}}>
+                  <Dashboard source={source} />
+                </div>
+                <div style={{display: sourceView ? '' : 'none', height: '100%'}}>
+                  <OriginEditor bindContent={text => bindContent(pane.key, text)} />
+                </div>
+              </TabPane>
+            )) }
+          </Tabs>
         </Content>
-        <EditorFooter collapsed={collapsed} siderWidth={siderWidth} collapseHandler={switchToolView}></EditorFooter>
+        <EditorFooter collapsed={collapsed} siderWidth={siderWidth} collapseHandler={switchToolView} switchSourceView={switchSourceView}></EditorFooter>
       </Layout>
     </Layout>
   );

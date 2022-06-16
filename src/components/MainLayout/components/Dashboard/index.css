@@ -48,3 +48,7 @@
     font-size: 14px;
     color: #575757;
 }
+
+.main-editor img {
+    max-width: 100%;
+}

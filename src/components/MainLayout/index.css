@@ -154,3 +154,35 @@ aside .ant-layout-sider-children::-webkit-scrollbar-thumb {
     color: #6886aa;
     font-weight: bold;
 }
+
+#main-content-box .ant-tabs-tab {
+    margin-left: 0;
+}
+
+#main-content-box .ant-tabs-nav {
+    margin-bottom: 0;
+}
+
+#main-content-box .ant-tabs-content {
+    height: 100%;
+}
+
+.ant-tabs-small > .ant-tabs-nav .ant-tabs-tab {
+    font-size: 12px;
+}
+
+.ant-tabs-card.ant-tabs-small > .ant-tabs-nav .ant-tabs-tab {
+    padding: 2px 10px;
+}
+
+.ant-tabs-tab-btn {
+    color: #9b9b9b;
+}
+
+.ant-tabs-tab-btn:hover {
+    color: #77a4da;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #75adf1;
+}
