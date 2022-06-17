@@ -186,3 +186,7 @@ aside .ant-layout-sider-children::-webkit-scrollbar-thumb {
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
     color: #75adf1;
 }
+
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
+    background: #f4f4f4;
+}
