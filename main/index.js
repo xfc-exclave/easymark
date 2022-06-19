@@ -1,6 +1,7 @@
 const { app, BrowserWindow, nativeImage } = require("electron")
 const path = require('path')
 require("./menuTemplate")
+const registerIpcListeners = require('./ipcMainListeners')
 
 const isDevelopment = !app.isPackaged;
 if (isDevelopment) {
@@ -13,7 +14,7 @@ function createWindow() {
         minWidth: 800,
         height: 800,
         minHeight: 400,
-        frame: false,
+        // frame: false,
         title: "EasyMark", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
         icon: nativeImage.createFromPath('public/favicon.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
         webPreferences: { // 网页功能设置
@@ -49,6 +50,8 @@ function createWindow() {
 
 app.whenReady().then(() => {
     createWindow()
+
+    registerIpcListeners();
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()

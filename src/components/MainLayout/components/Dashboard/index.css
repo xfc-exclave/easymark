@@ -52,3 +52,8 @@
 .main-editor img {
     max-width: 100%;
 }
+
+.main-editor pre {
+    background: #e9edf5;
+    padding: 10px;
+}

@@ -24,6 +24,7 @@ export default function OriginEditor(props) {
             horizontalScrollbarSize: 5
         }
     }
+
     return (
         <MonacoEditor width="100%" height="100%" language="markdown" theme='theme-inherit'
             options={editorOptions}

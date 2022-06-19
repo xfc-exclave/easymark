@@ -75,18 +75,13 @@ export default function MainLayout(props) {
       key: '1',
       title: 'react-tutorial.md',
       content: ''
-    },
-    {
-      key: '2',
-      title: 'python-all-base.md',
-      content: ''
-    },
-    {
-      key: '3',
-      title: 'django-tutorial.md',
-      content: ''
     }
   ]
+
+  console.log(window)
+  // window.ipcRenderer.on('readFileSuccess', (e, filePath) => {
+  //   console.log('---------', filePath)
+  // })
 
   const [newFileCounter, setNewFileCounter] = React.useState(1)
 
@@ -200,7 +195,7 @@ export default function MainLayout(props) {
         <EditorHeader collapsed={collapsed} siderWidth={siderWidth} />
         <Content id="main-content-box">
           <Tabs type="editable-card" onChange={onChange} activeKey={activeKey} onEdit={onEdit} size="small" style={{height: '100%'}}>
-            { panes.map((pane, index) =>(
+            { panes.map(pane =>(
               <TabPane tab={pane.title} key={pane.key} style={{height: '100%'}}>
                 <div style={{display: !sourceView ? '' : 'none'}}>
                   <Dashboard source={source} />

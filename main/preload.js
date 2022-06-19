@@ -1,10 +1,4 @@
-window.addEventListener('DOMContentLoaded', () => {
-    const replaceText = (selector, text) => {
-        const element = document.getElementById(selector)
-        if (element) element.innerHTML = text
-    }
-
-    for (const dependency of ['chrome', 'node', 'electron']) {
-        replaceText(`${dependency}-version`, process.versions[dependency])
-    }
-})
+console.log('xxxxxxxxxxxxxxxxxx-----')
+global.electron = require('electron');
+window.ipcRenderer = require('electron').ipcRenderer;
+window.remote = require('electron').remote;

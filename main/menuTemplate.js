@@ -1,4 +1,4 @@
-const { Menu, dialog, app} = require('electron')
+const { Menu, dialog, app, ipcMain } = require('electron')
 
 const menuTemplate = [
     {
@@ -18,9 +18,10 @@ const menuTemplate = [
             {
                 label: '打开...',
                 accelerator: 'CmdOrCtrl+O',
-                click: () => {
-                    dialog.showOpenDialogSync({
+                click: async (_, win) => {
+                    const { filePaths } = await dialog.showOpenDialog(win, {
                         title: "打开",
+                        properties: ['openFile', 'multiSelections'],
                         buttonLabel: "打开(O)",
                         filters: [
                             {
@@ -28,11 +29,12 @@ const menuTemplate = [
                                 extensions: ['md', 'markdown', 'text', 'txt', 'mmd', 'mdwn', 'mdown', '']
                             },
                         ]
-                    }).then(result => {
-                        console.log(result)
-                    }).catch(err => {
-                        console.log(err)
                     })
+
+                    if (Array.isArray(filePaths) && filePaths.length > 0) {
+                      console.log('yyyyy = ', filePaths)
+                      ipcMain.emit('app-open-files-by-id', win.id, filePaths)
+                    }
                 }
             },
             {
