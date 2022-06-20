@@ -32,8 +32,7 @@ const menuTemplate = [
                     })
 
                     if (Array.isArray(filePaths) && filePaths.length > 0) {
-                      console.log('yyyyy = ', filePaths)
-                      ipcMain.emit('app-open-files-by-id', win.id, filePaths)
+                      ipcMain.emit('app-open-files-by-id', win, filePaths)
                     }
                 }
             },

@@ -30,6 +30,7 @@ export default function OriginEditor(props) {
             options={editorOptions}
             onChange={editorChangeHandler}
             editorWillMount={editorWillMount}
+            value={props.content}
             editorDidMount={editorDidMount} />
     )
 }

@@ -21,6 +21,7 @@ function createWindow() {
             nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
             webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
             webSecurity: false, // 禁用同源策略
+            contextIsolation: false,
             nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
             preload: path.join(__dirname, 'preload.js')
         }

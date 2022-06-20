@@ -3,7 +3,5 @@
 const { ipcMain } = require('electron')
 
 module.exports = () => {
-    ipcMain.on('app-open-files-by-id', (win, filePath) => {
-        win.webContents.send('readFileSuccess', 'abc')
-    })
+    ipcMain.on('app-open-files-by-id', (win, filePaths) => win.webContents.send('file:readFileSuccess', filePaths))
 }

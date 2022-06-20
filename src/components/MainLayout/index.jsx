@@ -4,12 +4,16 @@ import {
   SettingFilled,
   MenuOutlined
 } from "@ant-design/icons";
+import iconv from 'iconv-lite'
+import path from 'path'
+import { nanoid } from "nanoid";
 import Dashboard from "./components/Dashboard";
 import FileTree from "./components/FileTree";
 import EditorHeader from "./components/EditorHeader";
 import EditorFooter from "./components/EditorFooter";
 import OriginEditor from "./components/OriginEditor";
 import "./index.css";
+const fs = window.require('fs')
 
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
@@ -70,36 +74,47 @@ export default function MainLayout(props) {
     />
   );
 
-  const currentFileList = [
+  const [panes, setPanes] = React.useState([
     {
       key: '1',
       title: 'react-tutorial.md',
       content: ''
     }
-  ]
+  ]);
 
-  console.log(window)
-  // window.ipcRenderer.on('readFileSuccess', (e, filePath) => {
-  //   console.log('---------', filePath)
-  // })
+  window.ipcRenderer.on('file:readFileSuccess', (e, filePaths) => {
+    filePaths.forEach(pathname => readMarkdown(pathname))
+  })
+
+  const readMarkdown = async pathname => {
+    await fs.readFile('G:/learning-path/about_me.md', { encoding: 'utf-8' }, (err, dirent) => {
+      if (err) {
+        console.log(err)
+      }
+      panes[0] = {...panes[0], content: dirent.toString()}
+      add({
+        title: nanoid() + '.md',
+        content: dirent.toString(),
+        key: nanoid(),
+      })
+    })
+  }
 
   const [newFileCounter, setNewFileCounter] = React.useState(1)
-
-  const [panes, setPanes] = React.useState(currentFileList);
-  const [activeKey, setActiveKey] = React.useState(currentFileList[0].key);
+  const [activeKey, setActiveKey] = React.useState(panes[0].key);
   const newTabIndex = React.useRef(0);
   const onChange = (key) => {
     setActiveKey(key);
   };
-  const add = () => {
+  const add = (item = null) => {
     const newActiveKey = `newTab${newTabIndex.current++}`;
     setPanes([
-      ...panes,
+      ...panes, item == null ?
       {
         title: 'new-easymark-' + newFileCounter + '.md',
         content: '',
         key: newActiveKey,
-      },
+      } : item,
     ]);
     setNewFileCounter(newFileCounter + 1)
     setActiveKey(newActiveKey);
@@ -197,11 +212,12 @@ export default function MainLayout(props) {
           <Tabs type="editable-card" onChange={onChange} activeKey={activeKey} onEdit={onEdit} size="small" style={{height: '100%'}}>
             { panes.map(pane =>(
               <TabPane tab={pane.title} key={pane.key} style={{height: '100%'}}>
+                <div style={{display: 'none'}}>{pane.content}</div>
                 <div style={{display: !sourceView ? '' : 'none'}}>
                   <Dashboard source={source} />
                 </div>
                 <div style={{display: sourceView ? '' : 'none', height: '100%'}}>
-                  <OriginEditor bindContent={text => bindContent(pane.key, text)} />
+                  <OriginEditor bindContent={text => bindContent(pane.key, text)} content={pane.content} />
                 </div>
               </TabPane>
             )) }
