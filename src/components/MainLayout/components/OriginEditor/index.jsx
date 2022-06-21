@@ -8,10 +8,9 @@ export default function OriginEditor(props) {
     const editorChangeHandler = (v, _) => props.bindContent(v)
     const editorWillMount = monaco => {
         monaco.editor.defineTheme('theme-inherit', {
-            base: 'vs',
+            base: 'vs-dark',
             inherit: true,
             colors: {
-                'editor.background': '#f0f2f5'
             },
             rules: []
         })

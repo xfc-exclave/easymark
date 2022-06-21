@@ -31,7 +31,7 @@ export default function EditorFooter(props) {
           <Col flex="none" style={{ padding: '0 5px' }}>
             <div className="footer-hint-text" style={{ display: 'inline-block' }}>
               <Tooltip placement="top" color='#b6b3b3' arrowPointAtCenter={true} style={{ fontSize: '12px' }} title="Word Count: 245">
-                <span className="text-button">245 W</span>
+                <span className="text-button">{props.wordCount == null ? 0 : props.wordCount} W</span>
               </Tooltip>
               <Tooltip placement="top" color='#b6b3b3' arrowPointAtCenter={true} style={{ fontSize: '12px' }} title="Select Encoding">
                 <span className="text-button">UTF-8</span>

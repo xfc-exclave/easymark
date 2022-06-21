@@ -21,8 +21,8 @@ const menuTemplate = [
                 click: async (_, win) => {
                     const { filePaths } = await dialog.showOpenDialog(win, {
                         title: "打开",
-                        properties: ['openFile', 'multiSelections'],
                         buttonLabel: "打开(O)",
+                        properties: ['openFile', 'multiSelections'],
                         filters: [
                             {
                                 name: 'Markdown File',
@@ -30,7 +30,6 @@ const menuTemplate = [
                             },
                         ]
                     })
-
                     if (Array.isArray(filePaths) && filePaths.length > 0) {
                       ipcMain.emit('app-open-files-by-id', win, filePaths)
                     }
@@ -38,14 +37,15 @@ const menuTemplate = [
             },
             {
                 label: '打开文件夹...',
-                click: () => {
-                    const { dialog } = require('electron')
-                    dialog.showOpenDialogSync({
+                click: (_, win) => {
+                    dialog.showOpenDialog(win, {
                         title: "选择文件夹",
-                        buttonLabel: "选择文件夹"
+                        buttonLabel: "选择文件夹",
+                        properties: ['openDirectory'],
                     }).then(result => {
-                        console.log(result.canceled)
-                        console.log(result.filePaths)
+                        if (!result.canceled) {
+                            ipcMain.emit('app-open-folder-by-id', win, result.filePaths)
+                        }
                     }).catch(err => {
                         console.log(err)
                     })
