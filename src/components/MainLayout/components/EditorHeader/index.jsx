@@ -14,6 +14,23 @@ const { Header } = Layout;
 export default function EditorHeader(props) {
   const [saved, setSaved] = React.useState(true)// 当前文本是否保存
   const [maximized, setMaximized] = React.useState(false)// 是否最大化
+  const [minimized, setMinimized] = React.useState(false)// 是否最大化
+
+  const command = {
+    minimize: () => {
+      const result = window.ipcRenderer.sendSync('window:global:display', 'minimize')
+      setMinimized(result)
+    },
+    maximize: () => {
+      const result = window.ipcRenderer.sendSync('window:global:display', 'maximize')
+      setMaximized(result)
+    },
+    unmaximize: () => {
+      const result = window.ipcRenderer.sendSync('window:global:display', 'unmaximize')
+      setMaximized(!result)
+    },
+    toTray: () => window.ipcRenderer.sendSync('window:global:display', 'to-tray')
+  }
 
   return (
     <div>
@@ -35,13 +52,13 @@ export default function EditorHeader(props) {
             </Breadcrumb>
           </Col>
           <Col flex="none">
-            <MinusOutlined className="system-button-item primary" />
+            <MinusOutlined className="system-button-item primary" onClick={() => command.minimize()} />
             {
               maximized
-                ? <CompressOutlined className="system-button-item primary" />
-                : <ExpandOutlined className="system-button-item primary" />
+                ? <CompressOutlined className="system-button-item primary" onClick={() => command.unmaximize()} />
+                : <ExpandOutlined className="system-button-item primary" onClick={() => command.maximize()} />
             }
-            <CloseOutlined className="system-button-item close" />
+            <CloseOutlined className="system-button-item close" onClick={() => command.toTray()} />
           </Col>
         </Row>
       </Header>

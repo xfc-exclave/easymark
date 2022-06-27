@@ -85,7 +85,7 @@ export default function FileTree(props) {
 
   return (
     <div>
-      <div style={{position: 'fixed', top: 35, left: 0, width: props.siderWidth, textAlign: 'center'}}>
+      <div style={{position: 'absolute', top: 35, left: 0, width: props.siderWidth, textAlign: 'center'}}>
         <Row style={{color: '#9b9b9b'}}>
           <Col span={8}>
             <div className={"easymark-sider-type " + (siderType === 'folder' ? "active" : '')} onClick={() => setSiderType('folder')}>Folder</div>

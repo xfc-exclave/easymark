@@ -1,11 +1,12 @@
-const { app, BrowserWindow, nativeImage } = require("electron")
+const { app, nativeImage, BrowserWindow } = require("electron")
 const path = require('path')
 require("./menuTemplate")
-const registerIpcListeners = require('./ipcMainListeners')
 
+const registerIpcListeners = require('./ipcMainListeners')
 const isDevelopment = !app.isPackaged;
+
 if (isDevelopment) {
-    require('electron-reload')(path.join(__dirname, "build"));
+    require('electron-reload')(path.join(__dirname, "src"));
 }
 
 function createWindow() {
@@ -22,10 +23,13 @@ function createWindow() {
             webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
             webSecurity: false, // 禁用同源策略
             contextIsolation: false,
+            enableRemoteModule: true,
             nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
             preload: path.join(__dirname, 'preload.js')
         }
     });
+    require('@electron/remote/main').initialize()
+    require('@electron/remote/main').enable(mainWindow.webContents)
 
     // 加载应用 --打包react应用后，__dirname为当前文件路径
     // mainWindow.loadURL(url.format({
@@ -47,12 +51,14 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
+
+    return mainWindow
 }
 
 app.whenReady().then(() => {
-    createWindow()
+    const mainWindow = createWindow()
 
-    registerIpcListeners();
+    registerIpcListeners(mainWindow);
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()

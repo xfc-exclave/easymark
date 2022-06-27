@@ -5,13 +5,12 @@ import {
   MenuOutlined,
   ExclamationCircleOutlined
 } from "@ant-design/icons";
-import iconv from 'iconv-lite'
 import { nanoid } from "nanoid";
 import Dashboard from "./components/Dashboard";
 import FileTree from "./components/FileTree";
 import EditorHeader from "./components/EditorHeader";
 import EditorFooter from "./components/EditorFooter";
-import OriginEditor from "./components/OriginEditor";
+import MarkEditor from "./components/MarkEditor";
 import "./index.css";
 const fs = window.require('fs')
 
@@ -92,9 +91,14 @@ export default function MainLayout(props) {
 
   const [currentFolderPath, setCurrentFolderPath] = React.useState(null)
 
-  window.ipcRenderer.on('file:readFileSuccess', (_, filePaths) => filePaths.forEach(pathname => readMarkdown(pathname)))
-  window.ipcRenderer.on('file:readFolderSuccess', (_, paths) => setCurrentFolderPath(paths[0]))
-
+  React.useEffect(() => {
+    return () => {
+      window.ipcRenderer.on('file:readFileSuccess', (_, filePaths) => filePaths.forEach(pathname => readMarkdown(pathname)))
+      window.ipcRenderer.on('file:readFolderSuccess', (_, paths) => setCurrentFolderPath(paths[0]))
+      window.ipcRenderer.on('editor:createNewEditorTab', () => createEditorWindow())
+      window.ipcRenderer.on('editor:closeCurrentEditorTab', () => closeEditor(activeKey))
+    }
+  }, [])
 
   const [activeKey, setActiveKey] = React.useState(editors[0].key);
   const readMarkdown = async pathname => {
@@ -140,14 +144,16 @@ export default function MainLayout(props) {
   const onChange = key => setActiveKey(key)
 
   const createEditorWindow = (item = null, path) => {
+    const index = newTabIndex.current++
     item = item == null ? {
-      title: 'untitled-' + (newTabIndex.current++) + '.md',
+      title: 'untitled-' + index + '.md',
       content: '',
       key: nanoid(),
       status: 'initialized',
       pathname: ''
     } : item
     setEditors([...editors, item]);
+    console.log(editors)
     setActiveKey(item.key);
     return item
   };
@@ -218,7 +224,7 @@ export default function MainLayout(props) {
           bottom: 0,
           background: '#464b50'
         }}>
-        <div style={{position: 'fixed', top: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
+        <div style={{position: 'absolute', top: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
           <Row wrap={false}>
             <Col flex="auto" className="window-dragable"></Col>
             <Col flex="none">
@@ -242,22 +248,21 @@ export default function MainLayout(props) {
       </Sider>
       <Layout className="site-layout" style={{ marginLeft: collapsed ? 0 : siderWidth, height: '100vh' }}>
         <EditorHeader collapsed={collapsed} siderWidth={siderWidth} />
-        <Content id="main-content-box">
+        <Content id="main-content-box" style={{overflowY: sourceView ? 'unset' : 'scroll'}}>
           <Tabs type="editable-card" onChange={onChange} activeKey={activeKey} onEdit={tabsHandler} size="small" style={{height: '100%'}}>
             { editors.map(editor =>(
               <TabPane tab={editor.title} key={editor.key} style={{height: '100%'}}>
-                <div style={{display: 'none'}}>{editor.content}</div>
                 <div style={{display: !sourceView ? '' : 'none'}}>
                   <Dashboard source={source} />
                 </div>
                 <div style={{display: sourceView ? '' : 'none', height: '100%'}}>
-                  <OriginEditor bindContent={text => onEditorChange(editor.key, text)} content={editor.content} />
+                  <MarkEditor bindContent={text => onEditorChange(editor.key, text)} content={editor.content} active={editor.key === activeKey} />
                 </div>
               </TabPane>
             )) }
           </Tabs>
         </Content>
-        <EditorFooter collapsed={collapsed} siderWidth={siderWidth} collapseHandler={switchToolView} switchSourceView={switchSourceView} wordCount={wordCount}></EditorFooter>
+        <EditorFooter collapsed={collapsed} siderWidth={siderWidth} collapseHandler={switchToolView} switchSourceView={switchSourceView} wordCount={wordCount} />
       </Layout>
     </Layout>
   );

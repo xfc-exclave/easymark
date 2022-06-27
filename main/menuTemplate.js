@@ -7,6 +7,7 @@ const menuTemplate = [
             {
                 label: '新建',
                 accelerator: 'CmdOrCtrl+N',
+                click: (_, win) => ipcMain.emit('create-new-editor-tab', win)
             },
             {
                 label: '新建窗口',
@@ -263,11 +264,14 @@ const menuTemplate = [
                 type: 'separator'
             },
             {
+                label: '刷新',
+                accelerator: 'F5',
+                click: (_, win) => win.loadURL('http://localhost:3000/')
+            },
+            {
                 label: '关闭',
                 accelerator: 'CmdOrCtrl+W',
-                click: () => {
-                    app.quit()
-                }
+                click: (_, win) => ipcMain.emit('close-current-editor-tab', win)
             },
             {
                 label: '结束进程',
@@ -516,26 +520,32 @@ const menuTemplate = [
             {
                 label: '一级标题',
                 accelerator: 'CmdOrCtrl+1',
+                click: (_, win) => ipcMain.emit('editor-text-shortcut-key', win, 'CTRL-1')
             },
             {
                 label: '二级标题',
                 accelerator: 'CmdOrCtrl+2',
+                click: (_, win) => ipcMain.emit('editor-text-shortcut-key', win, 'CTRL-2')
             },
             {
                 label: '三级标题',
                 accelerator: 'CmdOrCtrl+3',
+                click: (_, win) => ipcMain.emit('editor-text-shortcut-key', win, 'CTRL-3')
             },
             {
                 label: '四级标题',
                 accelerator: 'CmdOrCtrl+4',
+                click: (_, win) => ipcMain.emit('editor-text-shortcut-key', win, 'CTRL-4')
             },
             {
                 label: '五级标题',
                 accelerator: 'CmdOrCtrl+5',
+                click: (_, win) => ipcMain.emit('editor-text-shortcut-key', win, 'CTRL-5')
             },
             {
                 label: '六级标题',
                 accelerator: 'CmdOrCtrl+6',
+                click: (_, win) => ipcMain.emit('editor-text-shortcut-key', win, 'CTRL-6')
             },
             {
                 type: 'separator'

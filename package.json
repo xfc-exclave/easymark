@@ -4,6 +4,7 @@
   "main": "./main/index.js",
   "private": true,
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "antd": "^4.21.2",
     "buffer": "^6.0.3",
     "electron": "^19.0.4",

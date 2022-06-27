@@ -33,7 +33,6 @@
 
 #main-content-box {
     margin: 30px 0;
-    overflow-y: scroll;
 }
 
 #main-content-box::-webkit-scrollbar {
