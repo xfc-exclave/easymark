@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Row, Col, Dropdown, Menu, Tabs, Modal } from 'antd';
+import { Layout, Row, Col, Dropdown, Tabs, Modal, Menu } from 'antd';
 import {
   SettingFilled,
   MenuOutlined,
@@ -11,14 +11,17 @@ import FileTree from "./components/FileTree";
 import EditorHeader from "./components/EditorHeader";
 import EditorFooter from "./components/EditorFooter";
 import MarkEditor from "./components/MarkEditor";
+import MilkEditor from "./components/MilkEditor";
+import menuTemplate from "../menu"
 import "./index.css";
 const fs = window.require('fs')
+const path = window.require('path')
 
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
 const { confirm } = Modal;
 
-export default function MainLayout(props) {
+export default function MainLayout() {
 
   const [collapsed, setCollapsed] = React.useState(false)
   const switchToolView = () => setCollapsed(!collapsed)
@@ -212,6 +215,11 @@ export default function MainLayout(props) {
     })
   }
 
+  const showMenu = () => {
+    const menu = window.remote.Menu.buildFromTemplate(menuTemplate)
+    menu.popup({ window: window.remote.getCurrentWindow(), x: 20, y: 20 })
+  }
+
   return (
     <Layout style={{minHeight: '100vh'}}>
       <Sider collapsible collapsed={collapsed} trigger={null} collapsedWidth={0} width={siderWidth}
@@ -226,12 +234,10 @@ export default function MainLayout(props) {
         }}>
         <div style={{position: 'absolute', top: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
           <Row wrap={false}>
-            <Col flex="auto" className="window-dragable"></Col>
             <Col flex="none">
-              <Dropdown overlay={moreMenu} placement="bottomRight">
-                <MenuOutlined style={{cursor: 'pointer', fontSize: '16px', paddingTop: '5px'}} />
-              </Dropdown>
+              <MenuOutlined style={{cursor: 'pointer', fontSize: '16px', paddingTop: '5px'}} onClick={showMenu} />
             </Col>
+            <Col flex="auto" className="window-dragable"></Col>
           </Row>
         </div>
         <FileTree siderWidth={siderWidth} recordList={fileRecords} folderPath={currentFolderPath} createEditor={readMarkdown} />
@@ -252,12 +258,13 @@ export default function MainLayout(props) {
           <Tabs type="editable-card" onChange={onChange} activeKey={activeKey} onEdit={tabsHandler} size="small" style={{height: '100%'}}>
             { editors.map(editor =>(
               <TabPane tab={editor.title} key={editor.key} style={{height: '100%'}}>
-                <div style={{display: !sourceView ? '' : 'none'}}>
+                {/* <div style={{display: !sourceView ? '' : 'none'}}>
                   <Dashboard source={source} />
                 </div>
                 <div style={{display: sourceView ? '' : 'none', height: '100%'}}>
-                  <MarkEditor bindContent={text => onEditorChange(editor.key, text)} content={editor.content} active={editor.key === activeKey} />
-                </div>
+                  <MarkEditor style={{display: 'none'}} bindContent={text => onEditorChange(editor.key, text)} content={editor.content} active={editor.key === activeKey} />
+                </div> */}
+                <MilkEditor content={editor.content} bindContent={text => onEditorChange(editor.key, text)} />
               </TabPane>
             )) }
           </Tabs>

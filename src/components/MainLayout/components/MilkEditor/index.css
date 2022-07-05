@@ -1,0 +1,20 @@
+.milkdown-menu-wrapper .milkdown {
+    overflow: auto;
+    height: calc(100vh - 3.5rem - 75px);
+}
+
+.milkdown .editor {
+    margin: 0 auto;
+    max-width: 57.375rem;
+}
+div.milkdown {
+    min-height: 100%;
+}
+
+div.milkdown .ProseMirror {
+    padding: 1em 1.25em;
+}
+
+.milkdown-menu-wrapper .milkdown-menu {
+    border: none;
+}

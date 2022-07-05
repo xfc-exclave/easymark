@@ -1,8 +1,35 @@
 'use strict';
 
-const { ipcMain, Tray, Menu } = require('electron')
+const { ipcMain, Tray, Menu, nativeImage } = require('electron')
+const path = require('path')
 
 module.exports = (mainWindow) => {
+
+    const appTray = new Tray(nativeImage.createFromPath(path.join(__dirname, '../public/favicon.ico')));
+    appTray.setToolTip('EasyMark - 轻松开启您的写作之旅');
+    appTray.setContextMenu(Menu.buildFromTemplate([
+        {
+            label: '打开主窗口',
+            click: () => mainWindow.show()
+        },
+        {
+            label: 'EasyMark Cloud'
+        },
+        {
+            type: 'separator'
+        },
+        {
+            label: '设置'
+        },
+        {
+            label: '运行日志'
+        },
+        {
+            label: '完全退出',
+            click: () => mainWindow.quit()
+        },
+    ]));
+
     ipcMain.on('app-open-files-by-id', (win, filePaths) => win.webContents.send('file:readFileSuccess', filePaths))
     ipcMain.on('app-open-folder-by-id', (win, filePaths) => win.webContents.send('file:readFolderSuccess', filePaths))
     ipcMain.on('create-new-editor-tab', (win, _) => win.webContents.send('editor:createNewEditorTab'))
@@ -20,19 +47,7 @@ module.exports = (mainWindow) => {
             mainWindow.unmaximize()
             e.returnValue = !mainWindow.isMaximized() && !mainWindow.isMinimized()
         } else if (command === 'to-tray') {
-            const contextMenu = Menu.buildFromTemplate([
-                {
-                    label: '退出',
-                    click: () => mainWindow.quit()
-                }
-            ]);
-            const appTray = new Tray('../public/favicon.ico');
-            appTray.setToolTip('never forget');
-            appTray.setContextMenu(contextMenu);
-            appTray.on('click', () => {
-                mainWindow.show()
-                appTray.destroy()
-            })
+            appTray.on('click', () => mainWindow.show())
             mainWindow.hide()
             e.returnValue = true
         }

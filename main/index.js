@@ -1,6 +1,5 @@
 const { app, nativeImage, BrowserWindow } = require("electron")
 const path = require('path')
-require("./menuTemplate")
 
 const registerIpcListeners = require('./ipcMainListeners')
 const isDevelopment = !app.isPackaged;
@@ -15,7 +14,7 @@ function createWindow() {
         minWidth: 800,
         height: 800,
         minHeight: 400,
-        // frame: false,
+        frame: false,
         title: "EasyMark", // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
         icon: nativeImage.createFromPath('public/favicon.ico'), // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
         webPreferences: { // 网页功能设置
@@ -33,7 +32,7 @@ function createWindow() {
 
     // 加载应用 --打包react应用后，__dirname为当前文件路径
     // mainWindow.loadURL(url.format({
-    //   pathname: path.join(__dirname, './build/index.html'),
+    //   pathname: path.join(__dirname, '../build/index.html'),
     //   protocol: 'file:',
     //   slashes: true
     // }));
@@ -66,6 +65,7 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
+    app.clearRecentDocuments()
     if (process.platform !== 'darwin') app.quit()
 });
 
