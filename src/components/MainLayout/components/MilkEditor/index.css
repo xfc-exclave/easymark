@@ -18,3 +18,20 @@ div.milkdown .ProseMirror {
 .milkdown-menu-wrapper .milkdown-menu {
     border: none;
 }
+
+.milkdown .editor p {
+    margin: 0.5em 0;
+    line-height: 2;
+}
+
+.milkdown .editor .heading {
+    margin: 1em 0;
+}
+
+.milkdown .editor blockquote {
+    background: rgba(189, 215, 266, .25);
+}
+
+blockquote.blockquote>p.paragraph {
+    padding: 10px 0;
+}
