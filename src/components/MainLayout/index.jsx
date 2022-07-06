@@ -213,6 +213,7 @@ export default function MainLayout() {
         setWordCount(editor.wordCount)
       }
     })
+    setEditors(editors)
   }
 
   const showMenu = () => {
@@ -258,13 +259,13 @@ export default function MainLayout() {
           <Tabs type="editable-card" onChange={onChange} activeKey={activeKey} onEdit={tabsHandler} size="small" style={{height: '100%'}}>
             { editors.map(editor =>(
               <TabPane tab={editor.title} key={editor.key} style={{height: '100%'}}>
-                {/* <div style={{display: !sourceView ? '' : 'none'}}>
-                  <Dashboard source={source} />
+                <div style={{display: !sourceView ? '' : 'none', height: '100%'}}>
+                  {/* <Dashboard source={source} /> */}
+                  <MarkEditor bindContent={text => onEditorChange(editor.key, text)} content={editor.content} active={editor.key === activeKey} />
                 </div>
                 <div style={{display: sourceView ? '' : 'none', height: '100%'}}>
-                  <MarkEditor style={{display: 'none'}} bindContent={text => onEditorChange(editor.key, text)} content={editor.content} active={editor.key === activeKey} />
-                </div> */}
-                <MilkEditor content={editor.content} bindContent={text => onEditorChange(editor.key, text)} />
+                  <MilkEditor content={editor.content} bindContent={text => onEditorChange(editor.key, text)} />
+                </div>
               </TabPane>
             )) }
           </Tabs>
