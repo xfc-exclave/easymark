@@ -3,7 +3,7 @@
     height: calc(100vh - 3.5rem - 75px);
 }
 
-.milkdown-menu-wrapper {
+/* .milkdown-menu-wrapper {
     background: url('https://reference-1301046789.cos.ap-nanjing.myqcloud.com/cover/mountain.jpg') no-repeat;
     background-size: cover;
 }
@@ -14,7 +14,7 @@
 
 .milkdown {
     opacity: 0.8;
-}
+} */
 
 .milkdown .ProseMirror {
     margin: 0 auto;

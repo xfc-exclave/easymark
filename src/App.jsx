@@ -1,5 +1,5 @@
 import React from 'react'
-import MainLayout from './components/MainLayout'
+import MainLayout from './containers/MainLayout'
 import "./App.css";
 
 export default function App() {

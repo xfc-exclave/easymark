@@ -6,22 +6,20 @@ import {
   ExclamationCircleOutlined
 } from "@ant-design/icons";
 import { nanoid } from "nanoid";
-import Dashboard from "./components/Dashboard";
-import FileTree from "./components/FileTree";
-import EditorHeader from "./components/EditorHeader";
-import EditorFooter from "./components/EditorFooter";
-import MarkEditor from "./components/MarkEditor";
-import MilkEditor from "./components/MilkEditor";
-import menuTemplate from "../menu"
+import FileTree from "../../components/FileTree";
+import EditorHeader from "../../components/EditorHeader";
+import EditorFooter from "../../components/EditorFooter";
+import MarkEditor from "../../containers/MarkEditor";
+import MilkEditor from "../../containers/MilkEditor";
+import menuTemplate from "../../components/menu"
 import "./index.css";
 const fs = window.require('fs')
-const path = window.require('path')
 
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
 const { confirm } = Modal;
 
-export default function MainLayout() {
+export default function MainLayout(props) {
 
   const [collapsed, setCollapsed] = React.useState(false)
   const switchToolView = () => setCollapsed(!collapsed)
@@ -31,16 +29,14 @@ export default function MainLayout() {
 
   const [fileRecords, setFileRecords] = React.useState([])
 
-  const [source, setSource] = React.useState('')// 当前预览的源文本
   const [wordCount, setWordCount] = React.useState(0)
   const switchSourceView = () => {
-    if (sourceView) {
-      editors.forEach(editor => {
-        if (editor.key === activeKey) {
-          setSource(editor.content)
-        }
-      })
-    }
+    editors.forEach(editor => {
+      if (editor.key === activeKey) {
+        editor.content = editor.tempContent
+        console.log(editor)
+      }
+    })
     setSourceView(!sourceView)
   }
 
@@ -79,16 +75,10 @@ export default function MainLayout() {
     />
   );
 
-  // initialized-自动创建，temporary-自动创建修改未保存，saved-与本地保存文件一致，unsaved-与本地保存文件不一致
-  const [editors, setEditors] = React.useState([
-    {
-      key: nanoid(),
-      title: 'untitled-1.md',
-      content: '',
-      status: 'initialized',
-      pathname: ''
-    }
-  ]);
+  const editors = props.data.editorReducer;
+  const setEditors = (items) => props.saveEditors(items);
+  const addEditor = item => props.addEditor(item);
+
   const findEditorByKey = key => editors.find(o => o.key === key)
   const findEditorByPath = pathname => editors.find(o => pathname !== '' && o.pathname === pathname)
 
@@ -105,7 +95,8 @@ export default function MainLayout() {
 
   const [activeKey, setActiveKey] = React.useState(editors[0].key);
   const readMarkdown = async pathname => {
-    const title = pathname.substring(pathname.lastIndexOf('\\') + 1)
+    let title = pathname.substring(pathname.lastIndexOf('\\') + 1)
+    title = title.substring(title.lastIndexOf('/') + 1)
     await fs.readFile(pathname, { encoding: 'utf-8' }, (err, dirent) => {
       if (err) {
         console.log(err)
@@ -146,7 +137,7 @@ export default function MainLayout() {
   const newTabIndex = React.useRef(1);
   const onChange = key => setActiveKey(key)
 
-  const createEditorWindow = (item = null, path) => {
+  const createEditorWindow = (item = null, _path) => {
     const index = newTabIndex.current++
     item = item == null ? {
       title: 'untitled-' + index + '.md',
@@ -155,8 +146,7 @@ export default function MainLayout() {
       status: 'initialized',
       pathname: ''
     } : item
-    setEditors([...editors, item]);
-    console.log(editors)
+    addEditor(item);
     setActiveKey(item.key);
     return item
   };
@@ -202,20 +192,6 @@ export default function MainLayout() {
     }
   };
 
-  const onEditorChange = (key, text) => {
-    editors.forEach(editor => {
-      if (editor.key === key) {
-        if (editor.content.length !== text.length || editor.content !== text) {
-          editor.status = editor.status === 'initialized' ? 'temporary' : editor.status === 'saved' ? 'unsaved' : editor.status
-        }
-        editor.content = text
-        editor.wordCount = text == null ? 0 :text.replaceAll(' ', '').length
-        setWordCount(editor.wordCount)
-      }
-    })
-    setEditors(editors)
-  }
-
   const showMenu = () => {
     const menu = window.remote.Menu.buildFromTemplate(menuTemplate)
     menu.popup({ window: window.remote.getCurrentWindow(), x: 20, y: 20 })
@@ -260,11 +236,10 @@ export default function MainLayout() {
             { editors.map(editor =>(
               <TabPane tab={editor.title} key={editor.key} style={{height: '100%'}}>
                 <div style={{display: !sourceView ? '' : 'none', height: '100%'}}>
-                  {/* <Dashboard source={source} /> */}
-                  <MarkEditor bindContent={text => onEditorChange(editor.key, text)} content={editor.content} active={editor.key === activeKey} />
+                  <MarkEditor editorId={editor.key} setWordCount={count => setWordCount(count)} />
                 </div>
                 <div style={{display: sourceView ? '' : 'none', height: '100%'}}>
-                  <MilkEditor content={editor.content} bindContent={text => onEditorChange(editor.key, text)} />
+                  <MilkEditor editorId={editor.key} setWordCount={count => setWordCount(count)} />
                 </div>
               </TabPane>
             )) }

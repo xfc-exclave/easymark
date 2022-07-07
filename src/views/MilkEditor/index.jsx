@@ -22,9 +22,10 @@ import './index.css'
 
 export default function MilkEditor(props) {
   const {
-    bindContent,
-    content
+    setWordCount
   } = props;
+
+  const easyEditor = props.data.editorReducer.filter(item => item.key === props.editorId)[0]
 
   const gfmConfig = gfm.configure(blockquote, {
     keymap: {
@@ -75,7 +76,7 @@ export default function MilkEditor(props) {
         if (content.startsWith('/')) {
           return content === '/'
             ? { placeholder: 'Please select...', actions }
-            : { actions: actions.filter(({ keyword }) => keyword.some((key) => key.includes(content.slice(1).toLocaleLowerCase()))) };
+            : { actions: actions.filter(({ keyword }) => keyword == null ? null : keyword.some(key => key.includes(content.slice(1).toLocaleLowerCase()))) };
         }
       };
     }
@@ -88,9 +89,13 @@ export default function MilkEditor(props) {
         ctx.set(defaultValueCtx, '');
         ctx.get(listenerCtx)
           .beforeMount((ctx) => {})
-          .mounted(replaceAll(content))
+          .mounted(replaceAll(easyEditor.content))
           .updated((ctx, doc, prevDoc) => {})
-          .markdownUpdated((_ctx, markdown) => bindContent(markdown))
+          .markdownUpdated((_ctx, markdown) => {
+            easyEditor.tempContent = markdown
+            easyEditor.wordCount = markdown == null ? 0 :markdown.replaceAll(' ', '').length
+            setWordCount(easyEditor.wordCount)
+          })
           .blur((ctx) => {})
           .focus((ctx) => {})
           .destroy((ctx) => {});
