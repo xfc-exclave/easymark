@@ -40,12 +40,12 @@ module.exports = (mainWindow) => {
         if (command === 'minimize') {
             mainWindow.minimize()
             e.returnValue = mainWindow.isMinimized()
-        } else if (command === 'maximize') {
-            mainWindow.maximize()
-            e.returnValue = mainWindow.isMaximized()
-        } else if (command === 'unmaximize') {
-            mainWindow.unmaximize()
-            e.returnValue = !mainWindow.isMaximized() && !mainWindow.isMinimized()
+        } else if (command === 'fullscreen') {
+            mainWindow.setFullScreen(true)
+            e.returnValue = true
+        } else if (command === 'normalscreen') {
+            mainWindow.setFullScreen(false)
+            e.returnValue = false
         } else if (command === 'to-tray') {
             appTray.on('click', () => mainWindow.show())
             mainWindow.hide()

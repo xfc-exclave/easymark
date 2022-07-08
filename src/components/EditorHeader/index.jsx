@@ -13,7 +13,7 @@ const { Header } = Layout;
 
 export default function EditorHeader(props) {
   const [saved, setSaved] = React.useState(true)// 当前文本是否保存
-  const [maximized, setMaximized] = React.useState(false)// 是否最大化
+  const [fullScreen, setFullScreen] = React.useState(false)// 是否最大化
   const [minimized, setMinimized] = React.useState(false)// 是否最大化
 
   const command = {
@@ -21,13 +21,13 @@ export default function EditorHeader(props) {
       const result = window.ipcRenderer.sendSync('window:global:display', 'minimize')
       setMinimized(result)
     },
-    maximize: () => {
-      const result = window.ipcRenderer.sendSync('window:global:display', 'maximize')
-      setMaximized(result)
+    fullscreen: () => {
+      const result = window.ipcRenderer.sendSync('window:global:display', 'fullscreen')
+      setFullScreen(result)
     },
-    unmaximize: () => {
-      const result = window.ipcRenderer.sendSync('window:global:display', 'unmaximize')
-      setMaximized(!result)
+    normalscreen: () => {
+      const result = window.ipcRenderer.sendSync('window:global:display', 'normalscreen')
+      setFullScreen(result)
     },
     toTray: () => window.ipcRenderer.sendSync('window:global:display', 'to-tray')
   }
@@ -54,9 +54,9 @@ export default function EditorHeader(props) {
           <Col flex="none">
             <MinusOutlined className="system-button-item primary" onClick={() => command.minimize()} />
             {
-              maximized
-                ? <CompressOutlined className="system-button-item primary" onClick={() => command.unmaximize()} />
-                : <ExpandOutlined className="system-button-item primary" onClick={() => command.maximize()} />
+              fullScreen
+                ? <CompressOutlined className="system-button-item primary" onClick={() => command.fullscreen()} />
+                : <ExpandOutlined className="system-button-item primary" onClick={() => command.normalscreen()} />
             }
             <CloseOutlined className="system-button-item close" onClick={() => command.toTray()} />
           </Col>
