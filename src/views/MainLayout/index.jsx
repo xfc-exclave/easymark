@@ -6,7 +6,7 @@ import {
   ExclamationCircleOutlined
 } from "@ant-design/icons";
 import { nanoid } from "nanoid";
-import FileTree from "../../components/FileTree";
+import FileTree from "../../containers/FileTree";
 import EditorHeader from "../../components/EditorHeader";
 import EditorFooter from "../../components/EditorFooter";
 import MarkEditor from "../../containers/MarkEditor";
@@ -18,6 +18,7 @@ const fs = window.require('fs')
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
 const { confirm } = Modal;
+const fileChar = window.paltform === 'darwin' ? '/' : '\\';
 
 export default function MainLayout(props) {
 
@@ -87,7 +88,9 @@ export default function MainLayout(props) {
   React.useEffect(() => {
     return () => {
       window.ipcRenderer.on('file:readFileSuccess', (_, filePaths) => filePaths.forEach(pathname => readMarkdown(pathname)))
-      window.ipcRenderer.on('file:readFolderSuccess', (_, paths) => setCurrentFolderPath(paths[0]))
+      window.ipcRenderer.on('file:readFolderSuccess', (_, paths) => {
+        setCurrentFolderPath(paths[0])
+      })
       window.ipcRenderer.on('editor:createNewEditorTab', () => createEditorWindow())
       window.ipcRenderer.on('editor:closeCurrentEditorTab', () => closeEditor(activeKey))
     }
@@ -96,7 +99,9 @@ export default function MainLayout(props) {
   const [activeKey, setActiveKey] = React.useState(editors[0].key);
   const readMarkdown = async pathname => {
     let title = pathname.substring(pathname.lastIndexOf('\\') + 1)
-    title = title.substring(title.lastIndexOf('/') + 1)
+    if (window.platform === 'darwin') {
+      title = title.substring(title.lastIndexOf('/') + 1)
+    }
     await fs.readFile(pathname, { encoding: 'utf-8' }, (err, dirent) => {
       if (err) {
         console.log(err)
@@ -134,7 +139,7 @@ export default function MainLayout(props) {
     })
   }
 
-  const newTabIndex = React.useRef(1);
+  const newTabIndex = React.useRef(2);
   const onChange = key => setActiveKey(key)
 
   const createEditorWindow = (item = null, _path) => {
@@ -197,6 +202,10 @@ export default function MainLayout(props) {
     menu.popup({ window: window.remote.getCurrentWindow(), x: 20, y: 20 })
   }
 
+  const genCategory = text => {
+    console.log(text)
+  }
+
   return (
     <Layout style={{minHeight: '100vh'}}>
       <Sider collapsible collapsed={collapsed} trigger={null} collapsedWidth={0} width={siderWidth}
@@ -209,6 +218,7 @@ export default function MainLayout(props) {
           bottom: 0,
           background: '#464b50'
         }}>
+        { window.platform === 'darwin' ? <div></div> :
         <div style={{position: 'absolute', top: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
           <Row wrap={false}>
             <Col flex="none">
@@ -216,7 +226,7 @@ export default function MainLayout(props) {
             </Col>
             <Col flex="auto" className="window-dragable"></Col>
           </Row>
-        </div>
+        </div> }
         <FileTree siderWidth={siderWidth} recordList={fileRecords} folderPath={currentFolderPath} createEditor={readMarkdown} />
         <div style={{position: 'fixed', bottom: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
           <Row wrap={false}>

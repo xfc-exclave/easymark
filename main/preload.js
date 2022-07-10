@@ -5,3 +5,4 @@ window.app = require('electron').app;
 window.ipcRenderer = require('electron').ipcRenderer;
 window.remote = require('@electron/remote');
 window.BrowserWindow = BrowserWindow;
+window.platform = process.platform

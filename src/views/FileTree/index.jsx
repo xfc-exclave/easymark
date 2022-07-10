@@ -10,6 +10,8 @@ const fileChar = window.paltform === 'darwin' ? '/' : '\\';
 export default function FileTree(props) {
   const [siderType, setSiderType] = React.useState('folder')
 
+  // console.log(props.getDirectoryTree({'path': props.folderPath}))
+
   const onSelect = (_, info) => {
     if (info.node.isLeaf) {
       props.createEditor(info.node.path)

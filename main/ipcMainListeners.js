@@ -41,9 +41,11 @@ module.exports = (mainWindow) => {
             mainWindow.minimize()
             e.returnValue = mainWindow.isMinimized()
         } else if (command === 'fullscreen') {
+            console.log('full')
             mainWindow.setFullScreen(true)
             e.returnValue = true
         } else if (command === 'normalscreen') {
+            console.log('normal')
             mainWindow.setFullScreen(false)
             e.returnValue = false
         } else if (command === 'to-tray') {

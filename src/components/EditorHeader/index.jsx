@@ -55,8 +55,8 @@ export default function EditorHeader(props) {
             <MinusOutlined className="system-button-item primary" onClick={() => command.minimize()} />
             {
               fullScreen
-                ? <CompressOutlined className="system-button-item primary" onClick={() => command.fullscreen()} />
-                : <ExpandOutlined className="system-button-item primary" onClick={() => command.normalscreen()} />
+                ? <CompressOutlined className="system-button-item primary" onClick={() => command.normalscreen()} />
+                : <ExpandOutlined className="system-button-item primary" onClick={() => command.fullscreen()} />
             }
             <CloseOutlined className="system-button-item close" onClick={() => command.toTray()} />
           </Col>

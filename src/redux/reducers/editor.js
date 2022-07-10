@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 const initialEditors = [
   {
     key: nanoid(),
-    title: 'untitled-z.md',
+    title: 'untitled-1.md',
     content: '',
     status: 'initialized',
     pathname: ''
@@ -19,6 +19,7 @@ const editorReducer = (state = initialEditors, { type, data }) => {
     case SAVE_EDITORS:
       return data
     default:
+      console.log(state)
       return state;
   }
 };
