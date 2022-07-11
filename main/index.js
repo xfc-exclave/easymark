@@ -1,6 +1,7 @@
 const { app, nativeImage, BrowserWindow } = require("electron")
 const path = require('path')
 
+require('./menu')
 const registerIpcListeners = require('./ipcMainListeners')
 const isDevelopment = !app.isPackaged;
 

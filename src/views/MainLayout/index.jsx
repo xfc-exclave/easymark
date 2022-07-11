@@ -18,7 +18,6 @@ const fs = window.require('fs')
 const { TabPane } = Tabs;
 const { Content, Sider } = Layout;
 const { confirm } = Modal;
-const fileChar = window.paltform === 'darwin' ? '/' : '\\';
 
 export default function MainLayout(props) {
 
@@ -98,7 +97,8 @@ export default function MainLayout(props) {
 
   const [activeKey, setActiveKey] = React.useState(editors[0].key);
   const readMarkdown = async pathname => {
-    let title = pathname.substring(pathname.lastIndexOf('\\') + 1)
+    pathname = pathname.replaceAll('\\', '/')
+    let title = pathname.substring(pathname.lastIndexOf('/') + 1)
     if (window.platform === 'darwin') {
       title = title.substring(title.lastIndexOf('/') + 1)
     }
@@ -200,10 +200,6 @@ export default function MainLayout(props) {
   const showMenu = () => {
     const menu = window.remote.Menu.buildFromTemplate(menuTemplate)
     menu.popup({ window: window.remote.getCurrentWindow(), x: 20, y: 20 })
-  }
-
-  const genCategory = text => {
-    console.log(text)
   }
 
   return (

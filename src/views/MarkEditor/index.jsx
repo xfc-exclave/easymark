@@ -2,6 +2,10 @@ import React from 'react'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
 import './index.css'
 
+import MarkdownToc from '../../components/MarkdownToc'
+
+require('../../common/utils/toc')
+
 export default function MarkEditor(props) {
 
   const {
@@ -12,6 +16,8 @@ export default function MarkEditor(props) {
 
   const EasyEditor = React.useRef()
   const editorRef = React.useRef()
+
+  const [test, setTest] = React.useState('')
 
   React.useEffect(() => {
 
@@ -48,6 +54,7 @@ export default function MarkEditor(props) {
       easyEditor.tempContent = text
       easyEditor.wordCount = text == null ? 0 :text.replaceAll(' ', '').length
       setWordCount(easyEditor.wordCount)
+      setTest(text)
     })
 
     return () => {
@@ -58,6 +65,8 @@ export default function MarkEditor(props) {
 
 
   return (
-    <div ref={editorRef} style={{height: '100%'}}></div>
+    <div ref={editorRef} style={{height: '100%'}}>
+      <MarkdownToc content={test} />
+    </div>
   )
 }
