@@ -5,7 +5,7 @@ import "./index.css";
 
 const fs = window.require('fs')
 const { DirectoryTree } = Tree;
-const fileChar = window.paltform === 'darwin' ? '/' : '\\';
+const fileChar = '/';
 
 export default function FileTree(props) {
   const [siderType, setSiderType] = React.useState('folder')
@@ -19,6 +19,7 @@ export default function FileTree(props) {
   };
 
   const readSubFolder = (path) => {
+    path = path.replaceAll('\\', '/')
     const children = []
 
     const files = fs.readdirSync(path)
@@ -26,7 +27,7 @@ export default function FileTree(props) {
     if (files != null) {
       files.forEach(file => {
         const item = {title: '', key: nanoid(), isLeaf: false}
-        const states = fs.statSync(path + "/" + file);
+        const states = fs.statSync(path + fileChar + file);
         // 判断是否是目录，是就继续递归
         item.title = file
         if (states.isDirectory()) {

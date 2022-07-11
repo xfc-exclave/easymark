@@ -95,12 +95,12 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "customize-cra": "^1.0.0",
+    "electron": "^19.0.8",
+    "electron-builder": "^23.1.0",
     "electron-reload": "^2.0.0-alpha.1",
     "file-loader": "^4.1.0",
     "increase-memory-limit": "^1.0.7",
     "path-browserify": "^1.0.1",
-    "electron": "^19.0.4",
-    "electron-builder": "^23.1.0",
     "react-app-rewired": "^2.2.1"
   }
 }
