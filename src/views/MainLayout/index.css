@@ -110,16 +110,26 @@
 .ant-tree.ant-tree-directory .ant-tree-treenode-selected:hover::before, .ant-tree.ant-tree-directory .ant-tree-treenode-selected::before {
     background: none;
 }
+.ant-tree .ant-tree-node-content-wrapper:hover {
+    background: none;
+}
 
 .ant-tree.ant-tree-directory .ant-tree-treenode .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    color: #6886aa;
+}
+.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    background: none;
     color: #6886aa;
 }
 
 .ant-tree.ant-tree-directory .ant-tree-treenode:hover::before {
     background: #4b5155;
 }
+.ant-tree .ant-tree-treenode:hover {
+    background: #4b5155;
+}
 
-.ant-tree-node-content-wrapper {
+.ant-tree-node-content-wrapper, .ant-tree .ant-tree-node-content-wrapper {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;

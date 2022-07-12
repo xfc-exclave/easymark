@@ -10,8 +10,6 @@ const fileChar = '/';
 export default function FileTree(props) {
   const [siderType, setSiderType] = React.useState('folder')
 
-  // console.log(props.getDirectoryTree({'path': props.folderPath}))
-
   const onSelect = (_, info) => {
     if (info.node.isLeaf) {
       props.createEditor(info.node.path)
@@ -120,9 +118,16 @@ export default function FileTree(props) {
             )
           }}
         />
-        <div style={{display: siderType === 'category' ? 'block' : 'none', color: '#9b9b9b'}}>
-          category
-        </div>
+        
+        <Tree
+          defaultExpandAll={true}
+          treeData={props.tocData}
+          rootStyle={{
+            background: 'none',
+            color: '#9b9b9b',
+            display: siderType === 'category' ? 'block' : 'none'
+          }}
+        />
         <div style={{display: siderType === 'recent' ? 'block' : 'none', color: '#9b9b9b'}}>
           <List
             itemLayout="horizontal"

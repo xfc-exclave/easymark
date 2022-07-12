@@ -12,7 +12,9 @@ import EditorFooter from "../../components/EditorFooter";
 import MarkEditor from "../../containers/MarkEditor";
 import MilkEditor from "../../containers/MilkEditor";
 import menuTemplate from "../../components/menu"
+import { generateToc } from "../../common/utils/toc";
 import "./index.css";
+
 const fs = window.require('fs')
 
 const { TabPane } = Tabs;
@@ -30,11 +32,15 @@ export default function MainLayout(props) {
   const [fileRecords, setFileRecords] = React.useState([])
 
   const [wordCount, setWordCount] = React.useState(0)
+  const onContentChange = (size, curEditor) => {
+    setWordCount(size)
+    const treeData = generateToc(curEditor.tempContent)
+    setTocData(treeData)
+  }
   const switchSourceView = () => {
     editors.forEach(editor => {
       if (editor.key === activeKey) {
         editor.content = editor.tempContent
-        console.log(editor)
       }
     })
     setSourceView(!sourceView)
@@ -96,6 +102,7 @@ export default function MainLayout(props) {
   }, [])
 
   const [activeKey, setActiveKey] = React.useState(editors[0].key);
+  const [tocData, setTocData] = React.useState([])
   const readMarkdown = async pathname => {
     pathname = pathname.replaceAll('\\', '/')
     let title = pathname.substring(pathname.lastIndexOf('/') + 1)
@@ -223,7 +230,7 @@ export default function MainLayout(props) {
             <Col flex="auto" className="window-dragable"></Col>
           </Row>
         </div> }
-        <FileTree siderWidth={siderWidth} recordList={fileRecords} folderPath={currentFolderPath} createEditor={readMarkdown} />
+        <FileTree siderWidth={siderWidth} recordList={fileRecords} folderPath={currentFolderPath} createEditor={readMarkdown} tocData={tocData} />
         <div style={{position: 'fixed', bottom: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>
           <Row wrap={false}>
             <Col flex="none">
@@ -242,10 +249,10 @@ export default function MainLayout(props) {
             { editors.map(editor =>(
               <TabPane tab={editor.title} key={editor.key} style={{height: '100%'}}>
                 <div style={{display: !sourceView ? '' : 'none', height: '100%'}}>
-                  <MarkEditor editorId={editor.key} setWordCount={count => setWordCount(count)} />
+                  <MarkEditor editorId={editor.key} setWordCount={count => onContentChange(count, editor)} />
                 </div>
                 <div style={{display: sourceView ? '' : 'none', height: '100%'}}>
-                  <MilkEditor editorId={editor.key} setWordCount={count => setWordCount(count)} />
+                  <MilkEditor editorId={editor.key} setWordCount={count => onContentChange(count, editor)} />
                 </div>
               </TabPane>
             )) }

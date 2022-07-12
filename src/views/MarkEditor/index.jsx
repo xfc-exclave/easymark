@@ -4,8 +4,6 @@ import './index.css'
 
 import MarkdownToc from '../../components/MarkdownToc'
 
-require('../../common/utils/toc')
-
 export default function MarkEditor(props) {
 
   const {
@@ -66,7 +64,7 @@ export default function MarkEditor(props) {
 
   return (
     <div ref={editorRef} style={{height: '100%'}}>
-      <MarkdownToc content={test} />
+      {/* <MarkdownToc content={test} /> */}
     </div>
   )
 }

@@ -14,6 +14,10 @@ export default function MarkdownToc(props) {
         children: []
       })
     })
+    if (tempArr.length === 0) {
+      return []
+    }
+    console.log('tempArr = ', tempArr)
     const topLevel = Math.min.apply(null, tempArr.map(item => item.level))
 
     const emptyCategory = {
