@@ -213,13 +213,13 @@ export default function MainLayout(props) {
     <Layout style={{minHeight: '100vh'}}>
       <Sider collapsible collapsed={collapsed} trigger={null} collapsedWidth={0} width={siderWidth}
         style={{
-          overflow: 'auto',
+          overflow: 'hidden',
           position: 'fixed',
           padding: '70px 0 30px',
           left: 0,
           top: 0,
           bottom: 0,
-          background: '#464b50'
+          background: '#ededed'
         }}>
         { window.platform === 'darwin' ? <div></div> :
         <div style={{position: 'absolute', top: 0, left: 0, width: siderWidth, color: 'gray', height: 30, padding: '2px 10px'}}>

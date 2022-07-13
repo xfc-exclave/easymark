@@ -29,9 +29,17 @@ export const generateToc = content => {
 
 const buildTree = (arr, topLevel) => {
   const children = []
+  if (arr.length === 0) {
+    return children
+  }
   const tempArr = arr.filter(item => item.level === topLevel)
   if (tempArr.length === 0) {
-    return children
+    return [{
+      title: '未设置',
+      key: nanoid(),
+      level: topLevel,
+      children: [...arr]
+    }]
   }
 
   let group = []

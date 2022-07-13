@@ -2,8 +2,6 @@ import React from 'react'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
 import './index.css'
 
-import MarkdownToc from '../../components/MarkdownToc'
-
 export default function MarkEditor(props) {
 
   const {
@@ -15,15 +13,13 @@ export default function MarkEditor(props) {
   const EasyEditor = React.useRef()
   const editorRef = React.useRef()
 
-  const [test, setTest] = React.useState('')
-
   React.useEffect(() => {
 
     EasyEditor.current = monaco.editor.create(editorRef.current, {
       width: '100%',
       height: '100%',
       language: 'markdown',
-      theme: 'vs-dark',
+      theme: 'vs',
       options: {
         colorDecorators: true,
         scrollbar: {
@@ -33,7 +29,7 @@ export default function MarkEditor(props) {
       },
       editorWillMount: monaco => {
         monaco.editor.defineTheme('theme-inherit', {
-          base: 'vs-dark',
+          base: 'vs',
           inherit: true,
           colors: {},
           rules: []
@@ -48,11 +44,11 @@ export default function MarkEditor(props) {
     //   EasyEditor.current.setValue(easyEditor.content)
     // }
     EasyEditor.current.onDidChangeModelContent(_ => {
+      console.log('editor = ', EasyEditor.current)
       const text = EasyEditor.current.getValue()
       easyEditor.tempContent = text
-      easyEditor.wordCount = text == null ? 0 :text.replaceAll(' ', '').length
+      easyEditor.wordCount = text == null ? 0 : text.replaceAll(' ', '').length
       setWordCount(easyEditor.wordCount)
-      setTest(text)
     })
 
     return () => {
@@ -63,8 +59,6 @@ export default function MarkEditor(props) {
 
 
   return (
-    <div ref={editorRef} style={{height: '100%'}}>
-      {/* <MarkdownToc content={test} /> */}
-    </div>
+    <div ref={editorRef} style={{height: '100%'}}></div>
   )
 }

@@ -19,7 +19,6 @@ const editorReducer = (state = initialEditors, { type, data }) => {
     case SAVE_EDITORS:
       return data
     default:
-      console.log(state)
       return state;
   }
 };
