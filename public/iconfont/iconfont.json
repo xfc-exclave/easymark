@@ -1,0 +1,23 @@
+{
+  "id": "3526287",
+  "name": "EasyMark",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "24952614",
+      "name": "多云",
+      "font_class": "icon_duoyun",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "24952667",
+      "name": "暴雨",
+      "font_class": "icon_baoyu",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    }
+  ]
+}

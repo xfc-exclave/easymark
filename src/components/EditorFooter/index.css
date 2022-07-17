@@ -1,0 +1,8 @@
+.easy-modal-info .ant-modal-content {
+    background-color: #e8edf2;
+}
+
+.easy-modal-info .ant-modal-confirm-btns button {
+    background: #495060;
+    border: #636daa;
+}

@@ -1,16 +1,6 @@
 import { ADD_EDITOR, SAVE_EDITORS } from "../constant";
-import { nanoid } from "nanoid";
 
-// status === initialized-自动创建，temporary-自动创建修改未保存，saved-与本地保存文件一致，unsaved-与本地保存文件不一致
-const initialEditors = [
-  {
-    key: nanoid(),
-    title: 'untitled-1.md',
-    content: '',
-    status: 'initialized',
-    pathname: ''
-  }
-]
+const initialEditors = []
 
 const editorReducer = (state = initialEditors, { type, data }) => {
   switch (type) {

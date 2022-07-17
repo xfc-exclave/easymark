@@ -1,20 +1,45 @@
-import React from "react";
-import { Tree, Row, Col, Dropdown, Menu, List  } from 'antd';
+import React, { Fragment } from "react";
+import { Tree, Empty, Button, Menu, List, Tooltip } from 'antd';
+import {
+  ProfileOutlined,
+  NumberOutlined,
+  CloudFilled,
+  FontColorsOutlined,
+  ReloadOutlined
+} from "@ant-design/icons";
 import { nanoid } from "nanoid";
 import "./index.css";
 
 const fs = window.require('fs')
 const { DirectoryTree } = Tree;
 const fileChar = '/';
+const { dialog } = window.remote;
 
 export default function FileTree(props) {
   const [siderType, setSiderType] = React.useState('folder')
+  const [fileTreeNodes, setFileTreeNodes] = React.useState([])
 
   const onSelect = (_, info) => {
     if (info.node.isLeaf) {
       props.createEditor(info.node.path)
     }
   };
+
+  React.useEffect(() => {
+    return () => {
+      const folderPath = props.folderPath
+      let folderTree = []
+      if (folderPath == null) {
+        return folderTree
+      }
+      folderTree = [{
+        title: folderPath.substring(folderPath.lastIndexOf(fileChar) + 1),
+        key: nanoid(),
+        children: readSubFolder(folderPath)
+      }]
+      setFileTreeNodes(folderTree)
+    }
+  }, [props.folderPath])
 
   const readSubFolder = (path) => {
     path = path.replaceAll('\\', '/')
@@ -45,101 +70,95 @@ export default function FileTree(props) {
     return children
   }
 
-  const getFileTreeNodes = () => {
-    const folderPath = props.folderPath
-    let folderTree = []
-    if (folderPath == null) {
-      return folderTree
-    }
-    return [{
-      title: folderPath.substring(folderPath.lastIndexOf(fileChar) + 1),
-      key: nanoid(),
-      children: readSubFolder(folderPath)
-    }]
+  const chooseDirectoryHandler = () => {
+    dialog.showOpenDialog({
+      title: "选择文件夹",
+      buttonLabel: "选择文件夹",
+      properties: ['openDirectory'],
+    }).then(result => {
+      const webContents = window.webContents.getFocusedWebContents()
+      if (!result.canceled) {
+        webContents.send('file:readFolderSuccess', result.filePaths)
+      }
+    }).catch(err => {
+      console.log(err)
+    })
   }
 
-  const getDropdownMenu = v => {
-    const folderTree = [
+  const showMenu = v => {
+    if (v.node.pos !== '0-0') {
+      return
+    }
+    const menu = window.remote.Menu.buildFromTemplate([
       {
-        label: 'Reveal in Finder',
-        key: '1',
-        onClick: () => {
-          console.log(v.key)
-        }
+        label: 'Close Directory'
       },
       {
-        label: 'Copy',
-        key: '2',
+        label: 'Reload Directory'
       },
       {
-        label: 'Upload to EasyMark Cloud',
-        key: '3',
+        label: 'Expand All'
       },
       {
-        label: <span style={{ color: 'red' }}>Delete</span>,
-        key: '4',
-      },
-    ]
-    return (
-      <Menu items={folderTree} />
-    )
-  };
+        label: 'Collapse All'
+      }
+    ])
+    menu.popup({ window: window.remote.getCurrentWindow() })
+  }
 
   return (
-    <div>
-      <div style={{position: 'absolute', top: 35, left: 0, width: props.siderWidth, textAlign: 'center'}}>
-        <Row style={{color: '#9b9b9b'}}>
-          <Col span={8}>
-            <div className={"easymark-sider-type " + (siderType === 'folder' ? "active" : '')} onClick={() => setSiderType('folder')}>Folder</div>
-          </Col>
-          <Col span={8}>
-            <div className={"easymark-sider-type " + (siderType === 'category' ? "active" : '')} onClick={() => setSiderType('category')}>Category</div>
-          </Col>
-          <Col span={8}>
-            <div className={"easymark-sider-type " + (siderType === 'recent' ? "active" : '')} onClick={() => setSiderType('recent')}>Recent</div>
-          </Col>
-        </Row>
+    <Fragment>
+      <div style={{position: 'absolute', top: '50px', left: '10px', width: '25px', textAlign: 'center', color: '#9b9b9b'}}>
+        <Tooltip placement="right" color='#b6b3b3' style={{ fontSize: '12px' }} title="Opened Directory">
+          <div className={"easymark-sider-type " + (siderType === 'folder' ? "active" : '')} onClick={() => setSiderType('folder')}><ProfileOutlined /></div>
+        </Tooltip>
+        <Tooltip placement="right" color='#b6b3b3' style={{ fontSize: '12px' }} title="Table of Contents">
+          <div className={"easymark-sider-type " + (siderType === 'category' ? "active" : '')} onClick={() => setSiderType('category')}><NumberOutlined /></div>
+        </Tooltip>
+        <Tooltip placement="right" color='#b6b3b3' style={{ fontSize: '12px' }} title="Themes">
+          <div className={"easymark-sider-type " + (siderType === 'recent' ? "active" : '')} onClick={() => setSiderType('recent')}><FontColorsOutlined /></div>
+        </Tooltip>
+        <Tooltip placement="right" color='#b6b3b3' style={{ fontSize: '12px' }} title="EasyMark Cloud Repository">
+          <div className={"easymark-sider-type"}><CloudFilled /></div>
+        </Tooltip>
       </div>
-      <div style={{ padding: '0 10px', height: '100%' }}>
-        <DirectoryTree
-          multiple
-          onSelect={onSelect}
-          treeData={getFileTreeNodes()}
-          rootStyle={{
-            background: 'none',
-            color: '#9b9b9b',
-            display: siderType === 'folder' ? 'block' : 'none'
-          }}
-          titleRender={v => {
-            return (
-              <Dropdown overlay={() => getDropdownMenu(v)} trigger={['contextMenu']}>
-                <span>{v.title}</span>
-              </Dropdown>
-            )
-          }}
-        />
+      <div style={{ padding: '0 5px 0 40px', height: '100%' }}>
+        <div style={{ display: siderType === 'folder' ? 'block' : 'none', height: '100%' }}>
+          <div style={{ display: fileTreeNodes.length === 0 ? 'none' : 'block' }}>
+            <DirectoryTree
+              multiple
+              onSelect={onSelect}
+              treeData={fileTreeNodes}
+              rootStyle={{ background: 'none', color: '#9b9b9b' }}
+              onRightClick={v => showMenu(v)}
+            />
+          </div>
+          <div style={{ display: fileTreeNodes.length === 0 ? 'flex' : 'none', color: '#fff', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#9b9b9b' }}>
+            <Empty image="8.png"
+              description={
+                <span>No <span style={{ fontWeight: 'bold' }}>Directory</span> selected<br/>
+                  <a style={{color: '#75adf1', fontWeight: 'bold'}} onClick={chooseDirectoryHandler}>Choose Directory</a>
+                </span>
+              } />
+          </div>
+        </div>
         
-        <Tree
-          defaultExpandAll={true}
-          treeData={props.tocData}
-          rootStyle={{
-            background: 'none',
-            color: '#9b9b9b',
-            display: siderType === 'category' ? 'block' : 'none'
-          }}
-        />
-        <div style={{display: siderType === 'recent' ? 'block' : 'none', color: '#9b9b9b'}}>
-          <List
-            itemLayout="horizontal"
-            dataSource={props.recordList}
-            renderItem={item => (
-              <List.Item>
-                <List.Item.Meta title={item.pathname} description="file xxxxxxx" />
-              </List.Item>
-            )}
-          />
+        <div style={{ display: siderType === 'category' ? 'block' : 'none', height: '100%' }}>
+          <Tree defaultExpandAll={true} treeData={props.tocData} rootStyle={{ background: 'none', color: '#9b9b9b' }} />
+          <div style={{ display: props.tocData.length === 0 ? 'flex' : 'none', color: '#fff', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#9b9b9b' }}>
+            <Empty image="10.png" description={ false }>
+              <p>There were no <span style={{color: '#75adf1', fontWeight: 'bold'}}>Headings</span></p>
+              <Button id="sider-oper-btn" icon={<ReloadOutlined />}>Synchronize</Button>
+            </Empty>
+          </div>
+        </div>
+        
+        <div style={{display: siderType === 'recent' ? 'block' : 'none', height: '100%'}}>
+          <div style={{ display: 'flex', color: '#fff', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#9b9b9b' }}>
+            <Empty image="6.png" description={ <span>There were no <span style={{color: '#75adf1', fontWeight: 'bold'}}>Headings</span><br/>in current editor</span> } />
+          </div>
         </div>
       </div>
-    </div>
+    </Fragment>
   );
 };

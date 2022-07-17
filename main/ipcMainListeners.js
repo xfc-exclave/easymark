@@ -5,7 +5,7 @@ const path = require('path')
 
 module.exports = (mainWindow) => {
 
-    const appTray = new Tray(nativeImage.createFromPath(path.join(__dirname, '../public/favicon.ico')));
+    const appTray = new Tray(nativeImage.createFromPath(path.join(__dirname, '../public/favicon.png')));
     appTray.setToolTip('EasyMark - 轻松开启您的写作之旅');
     appTray.setContextMenu(Menu.buildFromTemplate([
         {
@@ -32,8 +32,9 @@ module.exports = (mainWindow) => {
 
     ipcMain.on('app-open-files-by-id', (win, filePaths) => win.webContents.send('file:readFileSuccess', filePaths))
     ipcMain.on('app-open-folder-by-id', (win, filePaths) => win.webContents.send('file:readFolderSuccess', filePaths))
+    ipcMain.on('switch-sider-bar-display', win => win.webContents.send('editor:switchSiderBarDisplay'))
+    ipcMain.on('switch-source-code-view', win => win.webContents.send('editor:switchSourceCodeView'))
     ipcMain.on('create-new-editor-tab', (win, _) => win.webContents.send('editor:createNewEditorTab'))
-    ipcMain.on('editor-text-shortcut-key', (win, command, params) => win.webContents.send('editor:parseShortcutKeyCommand', command, params))
     ipcMain.on('close-current-editor-tab', win => win.webContents.send('editor:closeCurrentEditorTab'))
     
     ipcMain.on('window:global:display', (e, command) => {

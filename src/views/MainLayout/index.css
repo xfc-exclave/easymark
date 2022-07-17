@@ -60,6 +60,10 @@
     color: #808080;
 }
 
+.footer-button-item.disabled:hover {
+    color: #d3d3d3;
+}
+
 .system-button-item {
     height: 100%;
 }
@@ -151,22 +155,6 @@ aside .ant-layout-sider-children::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
 
-.easymark-sider-type {
-    margin: 0 10px;
-    padding-bottom: 3px;
-    cursor: pointer;
-}
-
-.easymark-sider-type:hover {
-    border-bottom: 3px solid #6c6c6c;
-}
-
-.easymark-sider-type.active {
-    border-bottom: 3px solid #6886aa;
-    color: #6886aa;
-    font-weight: bold;
-}
-
 #main-content-box .ant-tabs-tab {
     margin-left: 0;
 }
@@ -201,4 +189,17 @@ aside .ant-layout-sider-children::-webkit-scrollbar-thumb {
 
 .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
     background: #f4f4f4;
+}
+
+.ant-empty .ant-btn-primary {
+    color: #1890ff;
+    background: #f0f2f5;
+    border: none;
+    outline: none;
+}
+.ant-empty .ant-btn-text {
+    color: #1890ff;
+}
+.ant-empty .ant-btn-text:hover {
+    background: #fff;
 }

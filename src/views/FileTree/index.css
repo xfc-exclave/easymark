@@ -1,0 +1,25 @@
+.easymark-sider-type {
+    font-size: 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.easymark-sider-type:hover {
+    color: #75adf1;
+}
+
+.easymark-sider-type.active {
+    color: #75adf1;
+}
+
+#sider-oper-btn {
+    background: none;
+    color: #9b9b9b;
+    border-color: #9b9b9b;
+    font-weight: bold;
+}
+
+#sider-oper-btn:hover {
+    color: #75adf1;
+    border-color: #75adf1;
+}

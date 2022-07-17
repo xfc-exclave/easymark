@@ -19,7 +19,7 @@ export default function MarkEditor(props) {
       width: '100%',
       height: '100%',
       language: 'markdown',
-      theme: 'vs',
+      theme: 'vs-dark',
       options: {
         colorDecorators: true,
         scrollbar: {
@@ -44,7 +44,6 @@ export default function MarkEditor(props) {
     //   EasyEditor.current.setValue(easyEditor.content)
     // }
     EasyEditor.current.onDidChangeModelContent(_ => {
-      console.log('editor = ', EasyEditor.current)
       const text = EasyEditor.current.getValue()
       easyEditor.tempContent = text
       easyEditor.wordCount = text == null ? 0 : text.replaceAll(' ', '').length

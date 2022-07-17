@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import {
   CloseOutlined,
   MinusOutlined,
@@ -32,24 +32,44 @@ export default function EditorHeader(props) {
     toTray: () => window.ipcRenderer.sendSync('window:global:display', 'to-tray')
   }
 
+  const getBreadItem = () => {
+    const editor = props.editor
+    if (editor.pathname === '') {
+      return ['...', editor.title]
+    }
+    const breadList = editor.pathname.split('/')
+    const limit = 6
+    const holder = []
+    if (breadList.length > limit) {
+      holder.push('...')
+    }
+    while(breadList.length > limit) {
+      breadList.shift()
+    }
+    return [...holder, ...breadList]
+  }
+
   return (
-    <div>
+    <Fragment>
       <Header className="site-layout-background" id="content-header" style={{ padding: 0, width: props.collapsed ? '100%' : 'calc(100% - ' + props.siderWidth + 'px)' }}>
         <Row wrap={false} style={{ height: '100%' }}>
           <Col flex="none">
             {
+              props.emptyPage ? <Fragment /> :
               saved
                 ? <CheckCircleFilled className="system-button-item info" />
                 : <InfoCircleFilled className="system-button-item danger" />
             }
           </Col>
           <Col flex="auto" className="window-dragable">
-            <Breadcrumb style={{ margin: '3px 0' }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Administrator</Breadcrumb.Item>
-              <Breadcrumb.Item>Desktop</Breadcrumb.Item>
-              <Breadcrumb.Item>python-tutorial.md</Breadcrumb.Item>
-            </Breadcrumb>
+            {
+              props.emptyPage ? <Fragment /> : 
+              <Breadcrumb style={{ margin: '3px 0' }}>
+                {
+                  getBreadItem().map((item, index) => <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>)
+                }
+              </Breadcrumb>
+            }
           </Col>
           <Col flex="none">
             <MinusOutlined className="system-button-item primary" onClick={() => command.minimize()} />
@@ -62,6 +82,6 @@ export default function EditorHeader(props) {
           </Col>
         </Row>
       </Header>
-    </div>
+    </Fragment>
   )
 }
